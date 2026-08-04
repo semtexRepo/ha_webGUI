@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <!-- <meta http-equiv="refresh" content="60"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script src="gui_entity.js"></script>
+    <script src="gui_view.js"></script>
+    <script src="gui_widget.js"></script>
+    <script src="gui_controller.js"></script>
+    <script src="ha_devices.js"></script>
+    <script src="ha_store.js"></script>
+    <script src="ha_socket.js"></script>
+    <script>
+        const HA_URL = "ws://192.168.1.63:18123/api/websocket";
+        const HA_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI2Njc3ZmM1NWZlOTY0MzcwYWM3MGU4MzlmZTNmOTE1OCIsImlhdCI6MTc4NTMzNjQyNSwiZXhwIjoyMTAwNjk2NDI1fQ.LaXHU7KhlJveWF4H1imGeO1SEf_wUeUgiQamaQBDTcY";
+    </script>
+  </head>
+  <body>
+    <h1>Test</h1>
+    <div id="app"></div>
+    <script>
+      let guiController;
+
+      async function init() {
+        const guiCfg = {id: "controller",views: [{id: "view1",widgets: [{id: "widget1",entities: [{ entityId: "input_number.r1_device_lamp_brightness_1", id: "entity1", initialState: "23" }]}]}]};
+
+        const socket = new HASocket(HA_URL, HA_TOKEN);
+        await socket.connect();
+
+        const store = new HADeviceStore(socket);
+        await store.loadDevices();
+        await store.start();
+
+        guiController = new GUIController(store, guiCfg);
+        await guiController.connectHaService();
+        
+        const app =
+            document.getElementById("app");
+
+        
+            app.appendChild(
+            guiController.buildDom()
+        );
+
+        
+        
+      }
+
+      init();
+
+    </script>
+  </body>
+</html>

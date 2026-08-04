@@ -1,0 +1,325 @@
+:root {
+  --bg: #0a0a0f;
+  --surface: rgba(255,255,255,0.04);
+  --surface-hover: rgba(255,255,255,0.09);
+  --border: rgba(255,255,255,0.08);
+  --border-bright: rgba(255,255,255,0.2);
+  --text: #f0f0f5;
+  --text-muted: rgba(240,240,245,0.9);
+  --divider-color: rgba(255,255,255,0.12);
+  --bar-height: 120px;
+  --gap: 2px;
+  --radius-scene: 4px;
+  --transition: 0.12s ease;
+
+  /* Role colors */
+  --role-away: #6366f1;
+  --role-sleep: #8b5cf6;
+  --role-default: #0ea5e9;
+  --role-cinema: #f59e0b;
+  --role-office: #10b981;
+  --role-lab: #ef4444;
+  --role-custom: #64748b;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+
+/*
+* MAIN VIEW
+/*
+/* ── Layout shell ─────────────────────────────── */
+.views {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* ── Scene mosaic ─────────────────────────────── */
+#scenes {
+  flex: 1;
+  display: grid;
+  gap: var(--gap);
+  padding: var(--gap);
+  min-height: 0;
+  grid-auto-flow: row;
+  grid-auto-rows: 1fr;
+}
+
+/* Grid templates per scene count */
+#scenes {
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+#scenes[data-count="1"] {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+}
+
+#scenes[data-count="1"] .scene-tile:first-child {
+  grid-column: span 1;
+  grid-row: 1;
+}
+
+#scenes[data-count="2"] {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 1fr;
+}
+
+#scenes[data-count="2"] .scene-tile:nth-child(1),
+#scenes[data-count="2"] .scene-tile:nth-child(2) {
+  grid-column: span 1;
+  grid-row: 1;
+}
+
+#scenes[data-count="3"] .scene-tile:first-child {
+  grid-column: span 12;
+  grid-row: 1;
+}
+
+#scenes[data-count="3"] .scene-tile:nth-child(2),
+#scenes[data-count="3"] .scene-tile:nth-child(3) {
+  grid-column: span 6;
+  grid-row: 2;
+}
+
+#scenes[data-count="4"] .scene-tile:nth-child(1),
+#scenes[data-count="4"] .scene-tile:nth-child(2) {
+  grid-column: span 6;
+  grid-row: 1;
+}
+
+#scenes[data-count="4"] .scene-tile:nth-child(3),
+#scenes[data-count="4"] .scene-tile:nth-child(4) {
+  grid-column: span 6;
+  grid-row: 2;
+}
+
+#scenes[data-count="5"] .scene-tile:nth-child(1),
+#scenes[data-count="5"] .scene-tile:nth-child(2) {
+  grid-column: span 6;
+  grid-row: 1;
+}
+
+#scenes[data-count="5"] .scene-tile:nth-child(3),
+#scenes[data-count="5"] .scene-tile:nth-child(4),
+#scenes[data-count="5"] .scene-tile:nth-child(5) {
+  grid-column: span 4;
+  grid-row: 2;
+}
+
+#scenes[data-count="6"] .scene-tile:nth-child(1),
+#scenes[data-count="6"] .scene-tile:nth-child(2),
+#scenes[data-count="6"] .scene-tile:nth-child(3) {
+  grid-column: span 4;
+  grid-row: 1;
+}
+
+#scenes[data-count="6"] .scene-tile:nth-child(4),
+#scenes[data-count="6"] .scene-tile:nth-child(5),
+#scenes[data-count="6"] .scene-tile:nth-child(6) {
+  grid-column: span 4;
+  grid-row: 2;
+}
+
+#scenes[data-count="7"] .scene-tile:nth-child(1),
+#scenes[data-count="7"] .scene-tile:nth-child(2),
+#scenes[data-count="7"] .scene-tile:nth-child(3) {
+  grid-column: span 4;
+  grid-row: 1;
+}
+
+#scenes[data-count="7"] .scene-tile:nth-child(4),
+#scenes[data-count="7"] .scene-tile:nth-child(5),
+#scenes[data-count="7"] .scene-tile:nth-child(6),
+#scenes[data-count="7"] .scene-tile:nth-child(7) {
+  grid-column: span 3;
+  grid-row: 2;
+}
+
+#scenes[data-count="8"] .scene-tile:nth-child(1),
+#scenes[data-count="8"] .scene-tile:nth-child(2),
+#scenes[data-count="8"] .scene-tile:nth-child(3),
+#scenes[data-count="8"] .scene-tile:nth-child(4) {
+  grid-column: span 3;
+  grid-row: 1;
+}
+
+#scenes[data-count="8"] .scene-tile:nth-child(5),
+#scenes[data-count="8"] .scene-tile:nth-child(6),
+#scenes[data-count="8"] .scene-tile:nth-child(7),
+#scenes[data-count="8"] .scene-tile:nth-child(8) {
+  grid-column: span 3;
+  grid-row: 2;
+}
+
+/* Scene tile */
+.scene-tile {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  align-self: stretch;
+  justify-self: stretch;
+  border-radius: var(--radius-scene);
+  cursor: pointer;
+  padding: 16px 20px;
+  transition: transform var(--transition);
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+/* Ambient corner glow from role color */
+.scene-tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 15% 85%, var(--role-color, var(--role-custom)) 0%, transparent 65%);
+  opacity: 0.18;
+  transition: opacity var(--transition);
+}
+
+.scene-tile:active {
+  transform: scale(0.95);
+}
+
+.scene-tile:active::before {
+  opacity: 0.35;
+}
+
+.scene-name {
+  position: relative;
+  font-size: clamp(14px, 2.5vw, 24px);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+
+/* ── Divider ──────────────────────────────────── */
+#divider {
+  height: 1px;
+  margin: 0 12px;
+  background: var(--divider-color);
+  box-shadow:
+    0 0 8px 1px rgba(255,255,255,0.08),
+    0 0 24px 2px rgba(255,255,255,0.04);
+  flex-shrink: 0;
+}
+
+/* ── Bottom bar ───────────────────────────────── */
+#bar {
+  height: var(--bar-height);
+  display: flex;
+  align-items: stretch;
+  gap: 0px;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+
+.bar-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0,128,128,0.15),
+    rgba(0,128,128,0.25),
+    rgba(0,128,128,0.15),
+    transparent
+  );
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  padding: 8px 6px;
+}
+
+.bar-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.bar-label {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 8px;
+}
+
+.bar-info {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  text-align: center;
+}
+
+/* Alert state for openings */
+.bar-btn.alert {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,0,0,0.17),
+    rgba(255,0,0,0.37),
+    rgba(255,0,0,0.17),
+    transparent
+  );
+}
+
+.bar-btn.alert .bar-label {
+  color: #f87171;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/*
+* CLIMATE VIEW
+*/
+.close_button {
+  position: absolute;
+  color: var(--text-muted);
+  top: 16px;
+  right: 16px;
+  border: none;
+  font-size: 32px;
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all var(--transition);
+}

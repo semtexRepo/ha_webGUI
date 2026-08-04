@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Room 1</title>
+    <meta http-equiv="refresh" content="10">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+  </head>
+  <body>
+    <div id="main_view" class="views" data-view="main">
+      <!-- Scene mosaic -->
+      <div id="scenes" data-count="5">
+        <div class="scene-tile" style="--role-color: var(--role-default)" onclick="selectScene('scene1')">
+          <span class="scene-name">General</span>
+        </div>
+
+        <div class="scene-tile" style="--role-color: var(--role-cinema)" onclick="selectScene('scene2')">
+          <span class="scene-name">Cinema</span>
+        </div>
+        
+        <div class="scene-tile" style="--role-color: var(--role-sleep)" onclick="selectScene('scene3')">
+          <span class="scene-name">Sleep</span>
+        </div>
+        
+        <div class="scene-tile" style="--role-color: var(--role-office)" onclick="selectScene('scene4')">
+          <span class="scene-name">Office</span>
+        </div>
+        
+        <div class="scene-tile" style="--role-color: var(--role-away)" onclick="selectScene('scene5')">
+          <span class="scene-name">Away</span>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div id="divider"></div>
+
+      <!-- Bottom bar -->
+      <div id="bar">
+        <div class="bar-btn active" onclick="openSection('climate')">
+          <span class="bar-icon">🌡</span>
+          <span class="bar-label">Climate</span>
+          <span data-widget="text" data-device="r1_device_temperature_sensor_1">---</span><span> ° </span>
+          <span class="bar-info"> • </span>
+          <span data-widget="text" data-device="r1_device_trv_setpoint_1">---</span><span> ° </span>
+        </div>
+        <div class="bar-btn" onclick="openSection('light')">
+          <span class="bar-icon">💡</span>
+          <span class="bar-label">Light</span>
+          <span data-widget="text" data-device="r1_device_illuminance_sensor_1">---</span><span> lx </span>
+        </div>
+        <div class="bar-btn alert" onclick="openSection('openings')">
+          <span class="bar-icon">🪟</span>
+          <span class="bar-label">Openings</span>
+          <span data-widget="text" data-device="r1_device_door_1">---</span><span> lx </span>
+        </div>
+        <div class="bar-btn" onclick="openSection('settings')">
+          <span class="bar-icon">⚙️</span>
+          <span class="bar-label">Settings</span>
+          <span class="bar-info"></span>
+        </div>
+      </div>
+    </div>
+
+   <div id="climate_view" class="views hidden" data-view="climate">
+      <button class="close_button" onclick="closeSection('climate')">✖</button>
+    </div>
+
+    <div id="light_view" class="hidden views" data-view="light">
+      <button class="close_button" onclick="closeSection('light')">✖</button>
+    </div>
+
+    <div id="openings_view" class="hidden views" data-view="openings">
+      <button class="close_button" onclick="closeSection('openings')">✖</button>
+    </div>
+
+    <div id="settings_view" class="hidden views" data-view="settings">
+      <button class="close_button" onclick="closeSection('settings')">✖</button>
+    </div>
+
+    <script src="dashboard.js"></script>
+  </body>
+</html>
