@@ -2,14 +2,25 @@ class GUIEntity {
     #id;
     #entityId;
     #state;
-    #widget;
+    #component;
     #stateCallback;
-    #control;
+    #componentListeners = [];
 
-    constructor(widget, cfg) {
-        this.#widget = widget;
+    constructor(component, cfg) {
+        this.#component = component;
         this.#id = cfg.id;
         this.#entityId = cfg.entityId;
+    }
+
+
+    addListener(listener) {
+        this.#componentListeners.push(listener);
+    }
+
+    #notifyListeners() {
+        for (const listener of this.#componentListeners) {
+            listener(this.#state);
+        }
     }
 
     setState(state) {
@@ -19,6 +30,7 @@ class GUIEntity {
 
         this.#state = state;
         this.#triggerStateUpdateEvent();
+        this.#notifyListeners();
     }
 
     get state() {
@@ -43,7 +55,7 @@ class GUIEntity {
         if (!this.#stateCallback) {
             return;
         }
-
+        
         this.#stateCallback(state);
     }
 
@@ -53,29 +65,6 @@ class GUIEntity {
         }
 
         this.#state = state;
-
-        this.#updateControlState(state);
-    }
-
-    assembleDom() {
-        this.#control = document.createElement("span");
-        this.#control.id = this.#id;
-        this.#control.className = "entity";
-        this.#control.textContent = this.#state;
-        
-        this.#control.onclick = () => {
-            this.setState(
-                this.state + 1
-            );
-            this.#updateControlState(this.state);
-        };
-
-        return this.#control;
-    }
-
-    #updateControlState(state) {
-        if (this.#control) {
-            this.#control.textContent = state;
-        }
+        this.#notifyListeners();
     }
 }

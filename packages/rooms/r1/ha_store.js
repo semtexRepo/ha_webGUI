@@ -142,9 +142,8 @@ class HADeviceStore {
 // create update method to pass as callback to HAWebSocket, which will be called when a state update is received from Home Assistant
 
     link(entityId, entityCallback) {
+        const device = this.#devices.get(entityId);
 
-        const device =
-            this.#devices.get(entityId);
         if (!device) {
             throw new Error(
                 `Device not found: ${entityId}`
@@ -152,7 +151,6 @@ class HADeviceStore {
         }
 
         entityCallback(device.state);
-
         device.addListener(entityCallback);
         return device.updateCallback.bind(device);
     }
@@ -218,7 +216,7 @@ class HADeviceStore {
     /*
     * Requests a state change for the given entity.
     * Returns the updated entity from Home Assistant, or null if the request failed.
-    * Called by HADevice.updateCallback() when a widget requests a state change.
+    * Called by HADevice.updateCallback() when a component requests a state change.
     */
 async setState(entity) {
     try {
@@ -227,8 +225,7 @@ async setState(entity) {
             value: entity.state
         });
 
-        const entities =
-            await this.#socket.getEntities();
+        const entities = await this.#socket.getEntities();
 
         const updatedEntity =
             entities.find(

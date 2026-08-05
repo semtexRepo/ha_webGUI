@@ -1,21 +1,21 @@
 class GUIView {
     #id;
-    #widgets = new Map();
+    #components = new Map();
     #controller;
     #control;
 
     constructor(controller, cfg) {
         this.#id = cfg.id;
         this.#controller = controller;
-        for (const widgetCfg of cfg.widgets) {
-            const widget = new GUIWidget(this, widgetCfg);
-            this.#widgets.set(widgetCfg.id, widget);
+        for (const componentCfg of cfg.components) {
+            const component = new GUIComponent(this, componentCfg);
+            this.#components.set(componentCfg.id, component);
         }
     }
 
     bindEntities() {
-        for (const widget of this.#widgets.values()) {
-            widget.bindEntities();
+        for (const component of this.#components.values()) {
+            component.bindEntities();
         }
     }
 
@@ -24,16 +24,22 @@ class GUIView {
         return callback;
     }
 
-    assembleDom() {
+    assembleDom(cfg) {
         this.#control = document.createElement("div");
-
         this.#control.id = this.#id;
         this.#control.className = "view";
 
-        for (const widget of this.#widgets.values()) {
-            this.#control.appendChild(
-                widget.assembleDom()
-            );
+        for (const componentCfg of cfg.components) {
+            const component = this.#components.get(componentCfg.id);
+
+            if (!component) {
+                console.warn(
+                    `Component not found: ${componentCfg.id}`
+                );
+                continue;
+            }
+
+            this.#control.appendChild(component.assembleDom(componentCfg));
         }
 
         return this.#control;

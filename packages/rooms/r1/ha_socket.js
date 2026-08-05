@@ -150,14 +150,15 @@ class HASocket {
                 };
 
             case "input_boolean":
-                return {
+                const serviceCall = {
                     domain: domain,
-                    service: value ? "turn_on" : "turn_off",
+                    service: value === "on" ? "turn_on" : "turn_off",
                     target: {
                         entity_id: entityId
                     },
                     service_data: {}
                 };
+                return serviceCall;
 
             default:
                 throw new Error(
@@ -217,19 +218,22 @@ class HASocket {
     * The method returns a promise that resolves when the service call is successful, or rejects if there is an error.
     */
     async callService(command) {
+
         const serviceCall =
             this.#buildServiceCall(
                 command.entityId,
                 command.value
             );
 
-        return this.#sendRequest({
+        const response = this.#sendRequest({
             type: "call_service",
             domain: serviceCall.domain,
             service: serviceCall.service,
             target: serviceCall.target,
             service_data: serviceCall.service_data
         });
+
+        return response;
     }
 
     /*

@@ -41,11 +41,10 @@ class HADevice {
             return;
         }
         
-        const state =
-            this.state;
+        const state = this.state;
 
         for (const listener of this.#listeners) {
-            listener(state);
+            listener(this.state);
         }
     }
 
@@ -60,11 +59,11 @@ class HADevice {
     }
 
     /*
-    * Callback used by widgets when the user changes the device state.
+    * Callback used by components when the user changes the device state.
     * Requests the state change via the store, receives the actual entity
     * from Home Assistant and updates the local entity.
     * If Home Assistant accepted the requested state, nothing happens.
-    * If Home Assistant returned a different state, widgets are notified.
+    * If Home Assistant returned a different state, components are notified.
     */
     async updateCallback(state) {
         const newEntity = {
@@ -72,17 +71,13 @@ class HADevice {
             state: this.#converter.toHA(state)
         };
 
-        const confirmedEntity =
-            await this.#store.setState(
-                newEntity
-            );
+        const confirmedEntity = await this.#store.setState(newEntity);
 
         if (confirmedEntity) {
             this.#entity = confirmedEntity;
         }
 
-        const actualState =
-            this.state;
+        const actualState = this.state;
 
         if (state !== actualState) {
             this.#triggerStateUpdateEvent();

@@ -10,7 +10,7 @@
 
     <script src="gui_entity.js"></script>
     <script src="gui_view.js"></script>
-    <script src="gui_widget.js"></script>
+    <script src="gui_component.js"></script>
     <script src="gui_controller.js"></script>
     <script src="ha_devices.js"></script>
     <script src="ha_store.js"></script>
@@ -27,7 +27,42 @@
       let guiController;
 
       async function init() {
-        const guiCfg = {id: "controller",views: [{id: "view1",widgets: [{id: "widget1",entities: [{ entityId: "input_number.r1_device_lamp_brightness_1", id: "entity1", initialState: "23" }]}]}]};
+
+const guiCfg = {
+    id: "controller",
+
+    views: [
+        {
+            id: "main",
+
+            components: [
+                {
+                    id: "lampToggle",
+                    type: "toggle",
+
+                    entities: [
+                        {
+                            id: "lampState1",
+                            entityId: "input_boolean.r1_device_test_wr"
+                        }
+                    ]
+                },
+
+                {
+                    id: "lampToggle2",
+                    type: "toggle",
+
+                    entities: [
+                        {
+                            id: "lampState2",
+                            entityId: "input_boolean.r1_device_test_wr"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
 
         const socket = new HASocket(HA_URL, HA_TOKEN);
         await socket.connect();
@@ -37,17 +72,10 @@
         await store.start();
 
         guiController = new GUIController(store, guiCfg);
-        await guiController.connectHaService();
+        guiController.connectServices();
         
-        const app =
-            document.getElementById("app");
-
-        
-            app.appendChild(
-            guiController.buildDom()
-        );
-
-        
+        const app = document.getElementById("app");
+        app.appendChild(guiController.buildDom(guiCfg));
         
       }
 

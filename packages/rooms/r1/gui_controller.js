@@ -13,7 +13,7 @@ class GUIController {
         }
     }
 
-    connectHaService() {
+    connectServices() {
         for (const view of this.#views.values()) {
             view.bindEntities();
         }
@@ -25,16 +25,22 @@ class GUIController {
     }
 
 
-    buildDom() {
+    buildDom(cfg) {
         this.#control = document.createElement("div");
-
         this.#control.id = this.#id;
         this.#control.className = "controller";
 
-        for (const view of this.#views.values()) {
-            this.#control.appendChild(
-                view.assembleDom()
-            );
+        for (const viewCfg of cfg.views) {
+            const view = this.#views.get(viewCfg.id);
+            
+            if (!view) {
+                console.warn(
+                    `View not found: ${viewCfg.id}`
+                );
+                continue;
+            }
+
+            this.#control.appendChild(view.assembleDom(viewCfg));
         }
 
         return this.#control;
